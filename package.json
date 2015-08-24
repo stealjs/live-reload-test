@@ -1,5 +1,5 @@
 {
-  "name": "live-reload-test",
+  "name": "live-reload-testing",
   "version": "1.0.0",
   "description": "Test harness for live-reload stuff",
   "main": "main.js",
