@@ -1,0 +1,36 @@
+{
+  "name": "live-reload-test",
+  "version": "1.0.0",
+  "description": "Test harness for live-reload stuff",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stealjs/live-reload-test.git"
+  },
+  "keywords": [
+    "live-reload",
+    "stealjs"
+  ],
+  "bin": {
+    "live-reload-test": "bin/live-reload-test.js"
+  },
+  "author": "Matthew Phillips",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stealjs/live-reload-test/issues"
+  },
+  "homepage": "https://github.com/stealjs/live-reload-test",
+  "dependencies": {
+    "pdenodeify": "^0.1.0",
+    "steal-tools": "^0.11.0-pre.0",
+    "through2": "^2.0.0",
+    "ws": "^0.8.0"
+  },
+  "system": {
+    "main": "client",
+    "npmDependencies": []
+  }
+}
