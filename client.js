@@ -19,6 +19,18 @@ function send(ws, msg){
 	ws.send(JSON.stringify(msg));
 }
 
+function waitForMessage(ws, type){
+	return new Promise(function(resolve){
+		ws.addEventListener("message", function onevent(data){
+			var msg = JSON.parse(data.data);
+			if(msg[type]) {
+				ws.removeEventListener("message", onevent);
+				resolve();
+			}
+		});
+	});
+}
+
 exports.put = function(address, content){
 	return loadPromise.then(function(ws){
 		send(ws, {
@@ -26,6 +38,7 @@ exports.put = function(address, content){
 			content: content,
 			type: "put"
 		});
+		return waitForMessage(ws, "put");
 	});
 };
 
@@ -34,13 +47,17 @@ exports.reset = function(){
 		send(ws, {
 			type: "reset"
 		});
-		return new Promise(function(resolve){
-			ws.addEventListener("message", function(data){
-				var msg = JSON.parse(data.data);
-				if(msg.reset) {
-					resolve();
-				}
-			});
+		return waitForMessage(ws, "reset");
+	});
+};
+
+exports.install = function(packageName, flags){
+	return loadPromise.then(function(ws){
+		send(ws, {
+			type: "install",
+			package: packageName,
+			flags: flags
 		});
+		return waitForMessage(ws, "install");
 	});
 };

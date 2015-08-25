@@ -4,6 +4,7 @@ var liveReload = require("steal-tools/lib/stream/live");
 var path = require("path");
 var fs = require("fs");
 var asap = require("pdenodeify");
+var spawn = require("child_process").spawn;
 
 // An array of functions that when called will reset the state
 var resets = {};
@@ -12,7 +13,9 @@ var messageTypes = {
 	put: function(msg, ws){
 		var address = path.join(process.cwd(), msg.address);
 		var oldContent = fs.readFileSync(address, "utf8");
-		asap(fs.writeFile)(address, msg.content, "utf8");
+		asap(fs.writeFile)(address, msg.content, "utf8").then(function(){
+			ws.send(JSON.stringify({put:true}));
+		});
 
 		if(!resets[address]) {
 			resets[address] = function(){
@@ -31,6 +34,25 @@ var messageTypes = {
 		Promise.all(fns).then(function(){
 			ws.send(JSON.stringify({reset: true}));
 		});
+	},
+	install: function(msg, ws){
+		var packageName = msg.package;
+		var flags = msg.flags || "";
+		var oldPackage = fs.readFileSync("package.json", "utf8");
+
+		var args = ["install", packageName];
+		if(flags) args.push(flags);
+		var child = spawn("npm", args);
+		child.on("exit", function(code){
+			ws.send(JSON.stringify({install: true, error: code}));
+		});
+
+		var key = packageName + args.join(" ");
+		if(!resets[key]) {
+			resets[key] = function(){
+				return asap(fs.writeFile)("package.json", oldPackage, "utf8");
+			};
+		}
 	}
 };
 
