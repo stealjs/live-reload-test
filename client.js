@@ -2,7 +2,7 @@ var loader = require("@loader");
 
 var loadPromise = new Promise(function(resolve, reject){
 	function connect(){
-		var host = window.document.location.host.replace(/:.*/, "");
+		var host = loader.liveReloadHost || window.document.location.host.replace(/:.*/, "");
 		var port = loader.liveReloadTestPort || 8015;
 		var ws = new WebSocket("ws://" + host + ":" + port);
 		ws.onopen = function(){
