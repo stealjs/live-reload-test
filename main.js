@@ -6,6 +6,12 @@ var fs = require("fs");
 var asap = require("pdenodeify");
 var spawn = require("child_process").spawn;
 
+var main;
+var flag = process.argv[2];
+if(flag === "--main") {
+	main = process.argv[3];
+}
+
 // An array of functions that when called will reset the state
 var resets = {};
 
@@ -78,7 +84,8 @@ function startServer(options, graphStream){
 };
 
 var graphStream = liveReload({
-	config: process.cwd() + "/package.json!npm"
+	config: process.cwd() + "/package.json!npm",
+	main: main
 }, {});
 
 graphStream.once("data", function(){
