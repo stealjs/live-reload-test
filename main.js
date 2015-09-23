@@ -1,4 +1,4 @@
-var WebSocketServer = require("ws").Server;
+var WebSocketServer = require("websocket").server;
 var http = require("http");
 var liveReload = require("steal-tools/lib/stream/live");
 var path = require("path");
@@ -20,7 +20,7 @@ var messageTypes = {
 		var address = path.join(process.cwd(), msg.address);
 		var oldContent = fs.readFileSync(address, "utf8");
 		asap(fs.writeFile)(address, msg.content, "utf8").then(function(){
-			ws.send(JSON.stringify({put:true}));
+			ws.sendUTF(JSON.stringify({put:true}));
 		});
 
 		if(!resets[address]) {
@@ -38,7 +38,7 @@ var messageTypes = {
 		});
 		resets = {};
 		Promise.all(fns).then(function(){
-			ws.send(JSON.stringify({reset: true}));
+			ws.sendUTF(JSON.stringify({reset: true}));
 		});
 	},
 	install: function(msg, ws){
@@ -50,7 +50,7 @@ var messageTypes = {
 		if(flags) args.push(flags);
 		var child = spawn("npm", args);
 		child.on("exit", function(code){
-			ws.send(JSON.stringify({install: true, error: code}));
+			ws.sendUTF(JSON.stringify({install: true, error: code}));
 		});
 
 		var key = packageName + args.join(" ");
@@ -66,10 +66,16 @@ function startServer(options, graphStream){
 	var port = options.liveReloadPort || 8015;
 	var server = http.createServer().listen(port);
 
-	var wss = new WebSocketServer({ server: server });
+	var wss = new WebSocketServer({
+		httpServer: server,
+		autoAcceptConnections: false
+	});
 
-	wss.on("connection", function(ws){
+	wss.on("request", function(request){
+		var ws = request.accept("echo-protocol", request.origin);
+
 		ws.on("message", function(data){
+			data = data.utf8Data;
 			var msg = JSON.parse(data);
 			var handler = messageTypes[msg.type];
 			if(!handler) {
