@@ -1,6 +1,6 @@
 {
   "name": "live-reload-testing",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Test harness for live-reload stuff",
   "main": "main.js",
   "scripts": {
