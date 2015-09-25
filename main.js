@@ -83,10 +83,14 @@ function startServer(options, graphStream){
 	return wss;
 };
 
-var graphStream = liveReload({
-	config: process.cwd() + "/package.json!npm",
-	main: main
-}, {});
+var system = {
+	config: process.cwd() + "/package.json!npm"
+};
+if(main) {
+	system.main = main;
+}
+
+var graphStream = liveReload(system, {});
 
 graphStream.once("data", function(){
 	startServer({}, graphStream);
