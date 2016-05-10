@@ -1,6 +1,6 @@
 {
   "name": "live-reload-testing",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Test harness for live-reload stuff",
   "main": "main.js",
   "scripts": {
@@ -25,7 +25,7 @@
   "homepage": "https://github.com/stealjs/live-reload-test",
   "dependencies": {
     "pdenodeify": "^0.1.0",
-    "steal-tools": "^0.14.0",
+    "steal-tools": "^0.16.3",
     "through2": "^2.0.0",
     "ws": "^0.8.0"
   },
