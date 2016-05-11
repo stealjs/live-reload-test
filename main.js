@@ -6,11 +6,14 @@ var fs = require("fs");
 var asap = require("pdenodeify");
 var spawn = require("child_process").spawn;
 
-var main;
+var main, args;
 var flag = process.argv[2];
 if(flag === "--main") {
 	main = process.argv[3];
+} else if(flag === "--cmd") {
+	args = process.argv.slice(3);
 }
+
 
 // An array of functions that when called will reset the state
 var resets = {};
@@ -94,4 +97,12 @@ var graphStream = liveReload(system, {});
 
 graphStream.once("data", function(){
 	startServer({}, graphStream);
+
+	if(args) {
+		var cmd = args.shift();
+		var child = spawn(cmd, args, { stdio: "inherit" });
+		child.on("exit", function(code){
+			process.exit(code);
+		});
+	}
 });
