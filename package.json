@@ -27,7 +27,7 @@
     "pdenodeify": "^0.1.0",
     "steal-tools": "^1.0.0",
     "through2": "^2.0.0",
-    "ws": "^1.0.0"
+    "ws": "^3.2.0"
   },
   "system": {
     "main": "client",
