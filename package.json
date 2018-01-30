@@ -25,7 +25,7 @@
   "homepage": "https://github.com/stealjs/live-reload-test",
   "dependencies": {
     "pdenodeify": "^0.1.0",
-    "steal-tools": "^1.0.0",
+    "steal-tools": "^1.11.1",
     "through2": "^2.0.0",
     "ws": "^1.0.0"
   },
